@@ -37,8 +37,9 @@ namespace Solution1.IdentityServer
             });
 
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
+                options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
 
+            
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
@@ -64,15 +65,15 @@ namespace Solution1.IdentityServer
                 throw new Exception("need to configure key material");
             }
 
-            services.AddAuthentication()
-                .AddGoogle(options =>
-                {
-                    // register your IdentityServer with Google at https://console.developers.google.com
-                    // enable the Google+ API
-                    // set the redirect URI to http://localhost:5000/signin-google
-                    options.ClientId = "copy client ID from Google here";
-                    options.ClientSecret = "copy client secret from Google here";
-                });
+            services.AddAuthentication();
+            //.AddGoogle(options =>
+            //{
+            // register your IdentityServer with Google at https://console.developers.google.com
+            // enable the Google+ API
+            // set the redirect URI to http://localhost:5000/signin-google
+            //    options.ClientId = "copy client ID from Google here";
+            //    options.ClientSecret = "copy client secret from Google here";
+            //});
         }
 
         public void Configure(IApplicationBuilder app)
