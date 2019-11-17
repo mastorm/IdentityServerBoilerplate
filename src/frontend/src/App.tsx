@@ -13,7 +13,17 @@ const manager = new UserManager({
 
 const App: React.FC = () => {
   manager.signinRedirectCallback().then(res => {
-    console.log(res)
+    console.log(res);
+
+    fetch("http://localhost:4999/Solution1", {
+      headers: {
+        "Authorization": "Bearer " + res.access_token
+      }
+    }).then(res => {
+      console.log(res.json().then(res => console.log(res)));
+    })
+  }).catch(err => {
+    console.log(err);
   });
 
   const doSignIn = useCallback(() => {
