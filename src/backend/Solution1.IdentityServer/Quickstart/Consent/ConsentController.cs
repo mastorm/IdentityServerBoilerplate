@@ -51,12 +51,7 @@ namespace IdentityServer4.Quickstart.UI
         public async Task<IActionResult> Index(string returnUrl)
         {
             var vm = await BuildViewModelAsync(returnUrl);
-            if (vm != null)
-            {
-                return View("Index", vm);
-            }
-
-            return View("Error");
+            return vm != null ? View("Index", vm) : View("Error");
         }
 
         /// <summary>

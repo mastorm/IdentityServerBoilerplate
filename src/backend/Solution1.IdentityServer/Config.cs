@@ -20,52 +20,55 @@ namespace Solution1.IdentityServer
 
         public static IEnumerable<ApiResource> GetApis()
         {
-            return new ApiResource[]
+            return new[]
             {
-                new ApiResource("api1", "My API #1")
+                new ApiResource("backend", "Solution1 backend")
             };
         }
 
         public static IEnumerable<Client> GetClients()
         {
+            // TODO: Inject via configuration or DB store
+            var spaUri = "http://localhost:3000";
+
             return new[]
             {
                 // client credentials flow client
-                new Client
-                {
-                    ClientId = "client",
-                    ClientName = "Client Credentials Client",
-
-                    AllowedGrantTypes = GrantTypes.ClientCredentials,
-                    ClientSecrets = {new Secret("511536EF-F270-4058-80CA-1C89C192F69A".Sha256())},
-
-                    AllowedScopes = {"api1"}
-                },
-
-                // MVC client using code flow + pkce
-                new Client
-                {
-                    ClientId = "mvc",
-                    ClientName = "MVC Client",
-
-                    AllowedGrantTypes = GrantTypes.CodeAndClientCredentials,
-                    RequirePkce = true,
-                    ClientSecrets = {new Secret("49C1A7E1-0C79-4A89-A3D6-A37998FB86B0".Sha256())},
-
-                    RedirectUris = {"http://localhost:5003/signin-oidc"},
-                    FrontChannelLogoutUri = "http://localhost:5003/signout-oidc",
-                    PostLogoutRedirectUris = {"http://localhost:5003/signout-callback-oidc"},
-
-                    AllowOfflineAccess = true,
-                    AllowedScopes = {"openid", "profile", "api1"}
-                },
+//                new Client
+//                {
+//                    ClientId = "client",
+//                    ClientName = "Client Credentials Client",
+//
+//                    AllowedGrantTypes = GrantTypes.ClientCredentials,
+//                    ClientSecrets = {new Secret("511536EF-F270-4058-80CA-1C89C192F69A".Sha256())},
+//
+//                    AllowedScopes = {"api1"}
+//                },
+//
+//                // MVC client using code flow + pkce
+//                new Client
+//                {
+//                    ClientId = "mvc",
+//                    ClientName = "MVC Client",
+//
+//                    AllowedGrantTypes = GrantTypes.CodeAndClientCredentials,
+//                    RequirePkce = true,
+//                    ClientSecrets = {new Secret("49C1A7E1-0C79-4A89-A3D6-A37998FB86B0".Sha256())},
+//
+//                    RedirectUris = {"http://localhost:5003/signin-oidc"},
+//                    FrontChannelLogoutUri = "http://localhost:5003/signout-oidc",
+//                    PostLogoutRedirectUris = {"http://localhost:5003/signout-callback-oidc"},
+//
+//                    AllowOfflineAccess = true,
+//                    AllowedScopes = {"openid", "profile", "api1"}
+//                },
 
                 // SPA client using code flow + pkce
                 new Client
                 {
                     ClientId = "spa",
-                    ClientName = "SPA Client",
-                    ClientUri = "http://identityserver.io",
+                    ClientName = "Solution1 React App",
+                    ClientUri = spaUri,
 
                     AllowedGrantTypes = GrantTypes.Code,
                     RequirePkce = true,
@@ -73,16 +76,13 @@ namespace Solution1.IdentityServer
 
                     RedirectUris =
                     {
-                        "http://localhost:5002/index.html",
-                        "http://localhost:5002/callback.html",
-                        "http://localhost:5002/silent.html",
-                        "http://localhost:5002/popup.html",
+                        $"{spaUri}/",
                     },
 
-                    PostLogoutRedirectUris = {"http://localhost:5002/index.html"},
-                    AllowedCorsOrigins = {"http://localhost:5002"},
+                    PostLogoutRedirectUris = {$"{spaUri}/authentication/callback"},
+                    AllowedCorsOrigins = {spaUri},
 
-                    AllowedScopes = {"openid", "profile", "api1"}
+                    AllowedScopes = {"openid", "profile", "backend"}
                 }
             };
         }

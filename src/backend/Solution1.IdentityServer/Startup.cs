@@ -56,6 +56,18 @@ namespace Solution1.IdentityServer
                 .AddInMemoryClients(Config.GetClients())
                 .AddAspNetIdentity<ApplicationUser>();
 
+            services.AddCors(options =>
+            {
+                options.AddPolicy("Solution1 SPA", policyBuilder =>
+                {
+                    policyBuilder
+                        .WithOrigins("http://localhost:3000")
+                        .AllowCredentials()
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+                });
+            });
+            
             if (Environment.IsDevelopment())
             {
                 builder.AddDeveloperSigningCredential();
@@ -87,6 +99,7 @@ namespace Solution1.IdentityServer
             app.UseStaticFiles();
 
             app.UseRouting();
+            app.UseCors("Solution1 SPA");
             app.UseIdentityServer();
             app.UseAuthorization();
             app.UseEndpoints(endpoints => { endpoints.MapDefaultControllerRoute(); });
